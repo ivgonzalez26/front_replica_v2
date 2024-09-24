@@ -25,7 +25,7 @@ export class TiendasComponent implements OnChanges {
 
     // Filtro por marca si es necesario
     if (cadena !== '') {
-      filteredLocales = filteredLocales.filter(local => local.marca === cadena);
+      filteredLocales = filteredLocales.filter(local => local.marca.toLowerCase() === cadena.toLowerCase());
     }
 
     // Ordenamos primero por conectionStatus y luego por status
