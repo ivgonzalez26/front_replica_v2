@@ -1,1 +1,70 @@
-<app-tiendas></app-tiendas>
+<select class="form-select m-2" style="max-width: 13rem;" [(ngModel)]="cadena_selected">
+  <option value="">Todas</option>
+  @for (cadena of cadenas; track $index) {
+    <option [value]="cadena">{{ cadena }}</option>
+  }
+</select>
+
+
+
+@if(cadena_selected !== '') {
+  <div class="row m-4">
+    <div class="col-12" style="text-align: center;">
+      <img src="images/{{cadena_selected.toLowerCase()}}.jpg" alt=" " style="width: 150px; height: 50px;">
+    </div>
+  </div>
+}
+@if(cadena_selected == '') {
+    <div class="row m-4">
+        <div class="col-12" style="text-align: center;">
+          @for(cadena of cadenas; track $index) {
+            <img src="images/{{cadena.toLowerCase()}}.jpg" alt=" " style="width: 150px; height: 50px;" (click)="cadena_selected = cadena">
+          }
+        </div>
+    </div>
+}
+
+<app-tiendas [locales]="locales" [cadena]="cadena_selected" (tienda_selected)="show_modal($event, content)"></app-tiendas>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Tramas Ejecutadas en {{local_Selected.local}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-border">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Status</th>
+              <th>Statement</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(trama of tramas; track $index) {
+              <tr>
+                <td>{{trama.id}}</td>
+                <td>
+                  @if (trama.status === 'error') {
+                    <span class="badge rounded-pill text-bg-danger">Error</span>
+                  }
+                  @if (trama.status !== 'error') {
+                    <span class="badge rounded-pill text-bg-success">Satisfactorio</span>
+                  }
+                </td>
+                <td><textarea class="col-12" style="min-height: 100px;" [value]="trama.statement"></textarea></td>
+                <td><textarea class="col-12" style="min-height: 100px;" [value]="trama.result"></textarea></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('Cancel click')">Cerrar</button>
+  </div>
+</ng-template>

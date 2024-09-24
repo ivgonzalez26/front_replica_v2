@@ -1,39 +1,25 @@
-<select class="form-select m-2" style="max-width: 13rem;" (change)="onMarcaChange($event)">
-    <option value="">Todas</option>
-    @for (option of options; track $index) {
-      <option [value]="option">{{ option }}</option>
-    }
-</select>
-
-<div class="logo">
-    <img src="{{companyLogo}}" alt="company logo">
-</div>
-
 <div class="row">
     <div class="col-12">
-        @for (local of filteredLocales; track $index) {
-            <button class="m-1" [ngClass]="{
-                'btn btn-outline-danger' : local.conectionStatus === 'desconectado',
-                'btn btn-outline-success' : local.conectionStatus === 'conectado'
-            }">
-               <span><b>{{ local.local }}</b><br/>
-                    @if (local.status === 'error') {
-                    <span class="badge rounded-pill text-bg-danger">Error</span>
-                  }
-                  @if (local.status === 'exitoso') {
-                    <span class="badge rounded-pill text-bg-success">Exitoso</span>
-                  }
-                  @if (local.status === 'sincronizando') {
-                    <span class="badge rounded-pill text-bg-warning">Sincronizando</span>
-                  }
-                </span>
-            </button>
+        @for (local of locales_shown; track $index) {
+          <button class="m-1" [ngClass]="local.conectionStatus === 'desconectado' ? 'btn btn-outline-danger' : 'btn btn-outline-success'" (click)="show_data(local)">
+            <span><b>{{ local.local }}</b><br/>
+              @if (local.status === 'error') {
+                <span class="badge rounded-pill text-bg-danger">Error</span>
+              }
+              @if (local.status === 'exitoso') {
+                <span class="badge rounded-pill text-bg-success">Exitoso</span>
+              }
+              @if (local.status === 'sincronizando') {
+                <span class="badge rounded-pill text-bg-warning">Sincronizando</span>
+              }
+            </span>
+          </button>
         }
     </div>
 </div>
-  
-  
 
 
 
-  
+
+
+
