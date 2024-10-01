@@ -1,17 +1,22 @@
+import { StatusService } from './service/status.service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { TiendasComponent } from "./tiendas/tiendas.component";
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http'; 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TiendasComponent, FormsModule, NgbModule],
+  imports: [RouterOutlet, TiendasComponent, FormsModule, NgbModule, HttpClientModule],
+  providers: [StatusService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  locales: any[] = [];
+
   cadena_selected = '';
   cadenas: string[] = ['American Deli',
                        'Baskin Robbins',
@@ -31,65 +36,21 @@ export class AppComponent {
                        'Tropi Burger'];
   tramas: any[] = [];
   local_Selected: any = null;
-  locales: any[] = [
-    {
-      local: "kfc 4",
-      conectionStatus: "desconectado",
-      status: "error",
-      marca: "KFC"
-    },
-    {
-      local: "kfc 5",
-      conectionStatus: "conectado",
-      status: "exitoso",
-      marca: "Menestras del negro"
-    },
-    {
-      local: "kfc 6",
-      conectionStatus: "conectado",
-      status: "sincronizando",
-      marca: "Tropi burger"
-    },
-    {
-      local: "kfc 4",
-      conectionStatus: "desconectado",
-      status: "error",
-      marca: "Tropi burger"
-    },
-    {
-      local: "kfc 5",
-      conectionStatus: "conectado",
-      status: "exitoso",
-      marca: "KFC"
-    },
-    {
-      local: "kfc 6",
-      conectionStatus: "conectado",
-      status: "sincronizando",
-      marca: "KFC"
-    },
-    {
-      local: "kfc 4",
-      conectionStatus: "desconectado",
-      status: "error",
-      marca: "Tropi burger"
-    },
-    {
-      local: "kfc 5",
-      conectionStatus: "conectado",
-      status: "exitoso",
-      marca: "KFC"
-    },
-    {
-      local: "kfc 6",
-      conectionStatus: "conectado",
-      status: "sincronizando",
-      marca: "Menestras del negro"
-    }
-  ];
 
+  constructor(private StatusService: StatusService, private modalService: NgbModal) {}
 
-  constructor(private modalService: NgbModal) {}
+  get_locales(){
+    this.StatusService.getStatus().then((response) => {
+          this.locales = response.data.status_shops.map((shop: any) => ({
+            tienda: shop.tienda,
+            application: shop.aplication ? true : false,
+            database: shop.database ? true : false   
+          }));
+      })
+      .catch((error) => {
+        console.error('Error al obtener los locales:', error);
+      });
+  }
 
   show_modal(local: any, content: any) {
     this.local_Selected = local;
@@ -104,4 +65,9 @@ export class AppComponent {
     this.modalService.open(content, { centered: true, fullscreen: true, backdrop: 'static', keyboard: false }).result.then(( response => {
     }), ( r => {}));
   }
+
+  ngOnInit(): void {
+    this.get_locales()
+  }
+
 }
