@@ -15,8 +15,8 @@ export class StatusService {
   }
 
   getTramasLocal(rst_id: number, desde: Date, hasta: Date): Promise<any> {
-    const desdeFormateada = desde.toISOString().slice(0, 10).replace(/-/g, '');
-    const hastaFormateada = hasta.toISOString().slice(0, 10).replace(/-/g, '');
+    const desdeFormateada = desde.toISOString().slice(0, 10);
+    const hastaFormateada = hasta.toISOString().slice(0, 10);
     let data = {
       "rst_id": rst_id,
       "fecha_inicio": desdeFormateada,

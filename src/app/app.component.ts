@@ -5,11 +5,12 @@ import { RouterOutlet } from '@angular/router';
 import { TiendasComponent } from "./tiendas/tiendas.component";
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TiendasComponent, FormsModule, NgbModule, HttpClientModule],
+  imports: [CommonModule, RouterOutlet, TiendasComponent, FormsModule, NgbModule, HttpClientModule],
   providers: [StatusService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -39,7 +40,9 @@ export class AppComponent {
   tramas: any[] = [];
   local_Selected: any = null;
 
-  constructor(private StatusService: StatusService, private modalService: NgbModal) {}
+  constructor(private StatusService: StatusService, private modalService: NgbModal) {
+    this.fin.setDate(this.inicio.getDate() - 7);
+  }
 
   get_locales(){
     this.StatusService.getStatus().then((response) => {

@@ -10,8 +10,10 @@
     </div>
     <div class="btn-group me-2">
       <div class="input-group m-2">
-        <input type="date" class="form-control" placeholder="Inicio" [(ngModel)]="inicio">
-        <input type="date" class="form-control" placeholder="Fin" [(ngModel)]="fin">
+        <input type="date" class="form-control" placeholder="Inicio" [ngModel]="inicio | date: 'y-MM-dd'"
+        (ngModelChange)="inicio = $event">
+        <input type="date" class="form-control" placeholder="Fin" [ngModel]="fin | date: 'y-MM-dd'"
+        (ngModelChange)="fin = $event">
       </div>
     </div>
   </div>
