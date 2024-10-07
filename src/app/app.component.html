@@ -1,11 +1,21 @@
-<select class="form-select m-2" style="max-width: 13rem;" [(ngModel)]="cadena_selected">
-  <option value="">Todas</option>
-  @for (cadena of cadenas; track $index) {
-    <option [value]="cadena">{{ cadena }}</option>
-  }
-</select>
-
-
+<div class="row">
+  <div class="btn-toolbar">
+    <div class="btn-group me-2">
+      <select class="form-select m-2" style="max-width: 13rem;" [(ngModel)]="cadena_selected">
+        <option value="">Todas</option>
+        @for (cadena of cadenas; track $index) {
+          <option [value]="cadena">{{ cadena }}</option>
+        }
+      </select>
+    </div>
+    <div class="btn-group me-2">
+      <div class="input-group m-2">
+        <input type="date" class="form-control" placeholder="Inicio" [(ngModel)]="inicio">
+        <input type="date" class="form-control" placeholder="Fin" [(ngModel)]="fin">
+      </div>
+    </div>
+  </div>
+</div>
 
 @if(cadena_selected !== '') {
   <div class="row m-4">

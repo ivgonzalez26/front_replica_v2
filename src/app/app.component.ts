@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { TiendasComponent } from "./tiendas/tiendas.component";
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  inicio: Date = new Date();
+  fin: Date = new Date();
   locales: any[] = [];
 
   cadena_selected = '';
@@ -44,7 +46,7 @@ export class AppComponent {
           this.locales = response.data.status_shops.map((shop: any) => ({
             tienda: shop.tienda,
             application: shop.aplication ? true : false,
-            database: shop.database ? true : false   
+            database: shop.database ? true : false
           }));
       })
       .catch((error) => {
@@ -54,16 +56,13 @@ export class AppComponent {
 
   show_modal(local: any, content: any) {
     this.local_Selected = local;
-    this.tramas = [
-      {id: 1, statement: 'UNA SENTENCIA', result: 'un resultado', rst_id: 15, status: 'ok'},
-      {id: 1, statement: 'UNA SENTENCIA', result: 'un resultado', rst_id: 15, status: 'error'},
-      {id: 1, statement: 'UNA SENTENCIA', result: 'un resultado', rst_id: 15, status: 'ok'},
-      {id: 1, statement: 'UNA SENTENCIA', result: 'un resultado', rst_id: 15, status: 'ok'},
-      {id: 1, statement: 'UNA SENTENCIA', result: 'un resultado', rst_id: 15, status: 'ok'},
-      {id: 1, statement: 'UNA SENTENCIA', result: 'un resultado', rst_id: 15, status: 'ok'}
-    ];
-    this.modalService.open(content, { centered: true, fullscreen: true, backdrop: 'static', keyboard: false }).result.then(( response => {
-    }), ( r => {}));
+    /*
+    this.StatusService.getTramasLocal(this.local_Selected.rst_id, this.inicio, this.fin).then( r => {
+      this.tramas = r.tramas;
+      this.modalService.open(content, { centered: true, fullscreen: true, backdrop: 'static', keyboard: false }).result.then(( response => {
+      }), ( r => {}));
+    }).catch( e => console.log(e) );
+    */
   }
 
   ngOnInit(): void {
