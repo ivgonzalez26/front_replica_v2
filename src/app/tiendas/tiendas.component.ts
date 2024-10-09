@@ -6,31 +6,36 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tiendas.component.html',
-  styleUrl: './tiendas.component.scss'
+  styleUrls: ['./tiendas.component.scss']
 })
 export class TiendasComponent implements OnChanges {
-  @Input('cadena') cadena: string = '';
-  @Input('locales') locales: any[] = [];
+  @Input('cadena') cadena: string = '';  // Recibe la cadena seleccionada
+  @Input('locales') locales: any[] = []; // Recibe el arreglo de cadenas con restaurants
   @Output('tienda_selected') tienda_selected: EventEmitter<any> = new EventEmitter();
 
-  // Variable para mostrar los locales ordenados
+  // Variable para mostrar las tiendas filtradas y ordenadas
   locales_shown: any[] = [];
 
   ngOnChanges() {
-    this.onMarcaChange(this.cadena);
+    this.onCadenaChange(this.cadena);
   }
 
-  onMarcaChange(cadena: string) {
-    let filteredLocales = [...this.locales];
+  onCadenaChange(cadena: string) {
+    // Limpiamos las tiendas mostradas
+    let filteredLocales: any[] = [];
 
-    // Filtro por marca si es necesario
-    if (cadena !== '') {
-      filteredLocales = filteredLocales.filter(local => local.marca.toLowerCase() === cadena.toLowerCase());
+    if (cadena === '') {
+      // Si no se selecciona cadena, mostrar todas las tiendas de todas las cadenas
+      filteredLocales = this.locales.flatMap(shop => shop.restaurants);
+    } else {
+      // Filtrar por la cadena seleccionada
+      const selectedShop = this.locales.find(shop => shop.cadena.toLowerCase() === cadena.toLowerCase());
+      filteredLocales = selectedShop ? selectedShop.restaurants : [];
     }
 
-    // Ordenamos primero por conectionStatus y luego por status
+    // Ordenar las tiendas mostradas
     this.locales_shown = filteredLocales.sort((a, b) => {
-      // Prioridad por conectionStatus: desconectado primero
+      // Prioridad por conectionStatus: desconectado primero (asumiendo que es una propiedad en `restaurants`)
       if (a.conectionStatus === 'desconectado' && b.conectionStatus === 'conectado') {
         return -1;
       }
@@ -53,6 +58,7 @@ export class TiendasComponent implements OnChanges {
   }
 
   show_data(local: any) {
+    // Emitimos el local seleccionado al padre
     this.tienda_selected.emit(local);
   }
 }

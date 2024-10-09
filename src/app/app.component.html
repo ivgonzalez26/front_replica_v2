@@ -1,7 +1,7 @@
 <div class="row">
   <div class="btn-toolbar">
     <div class="btn-group me-2">
-      <select class="form-select m-2" style="max-width: 13rem;" [(ngModel)]="cadena_selected">
+      <select class="form-select m-2" style="max-width: 13rem;" [(ngModel)]="cadena_selected" (change)="onCadenaChange()">
         <option value="">Todas</option>
         @for (cadena of cadenas; track $index) {
           <option [value]="cadena">{{ cadena }}</option>
@@ -22,15 +22,15 @@
 @if(cadena_selected !== '') {
   <div class="row m-4">
     <div class="col-12" style="text-align: center;">
-      <img src="images/{{cadena_selected.toLowerCase()}}.jpg" alt=" " style="width: 150px; height: 50px;">
+        <img src="images/{{cdn_id_selected}}.jpg" alt=" " style="width: 150px; height: 50px;">
     </div>
   </div>
 }
 @if(cadena_selected == '') {
     <div class="row m-4">
         <div class="col-12" style="text-align: center;">
-          @for(cadena of cadenas; track $index) {
-            <img src="images/{{cadena.toLowerCase()}}.jpg" alt=" " style="width: 150px; height: 50px;" (click)="cadena_selected = cadena">
+          @for (shop of locales; track $index) {
+            <img src="images/{{shop.cdn_id}}.jpg" alt=" " style="width: 150px; height: 50px;" (click)="onImageClick(shop.cdn_id)">
           }
         </div>
     </div>
