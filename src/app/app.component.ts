@@ -19,24 +19,10 @@ export class AppComponent {
   inicio: Date = new Date();
   fin: Date = new Date();
   locales: any[] = [];
-
   cadena_selected = '';
-  cadenas: string[] = ['American Deli',
-                       'Baskin Robbins',
-                       'Cafe Astoria',
-                       'Cajun',
-                       'Casa Res',
-                       'Cinnabon',
-                       'Dolce Incontro',
-                       'Embutser',
-                       'El Español',
-                       'Federer',
-                       'Gus',
-                       'Il Cappo',
-                       'Juan Valdez',
-                       'KFC',
-                       'Menestras del Negro',
-                       'Tropi Burger'];
+  cdn_id_selected = '';
+  cadenas: any[] = [];
+  tiendas: any[] = [];
   tramas: any[] = [];
   local_Selected: any = null;
 
@@ -44,18 +30,57 @@ export class AppComponent {
     this.fin.setDate(this.inicio.getDate() - 7);
   }
 
-  get_locales(){
+  get_locales() {
     this.StatusService.getStatus().then((response) => {
-          this.locales = response.data.status_shops.map((shop: any) => ({
-            tienda: shop.tienda,
-            application: shop.aplication ? true : false,
-            database: shop.database ? true : false
-          }));
-      })
-      .catch((error) => {
-        console.error('Error al obtener los locales:', error);
-      });
+      this.locales = response.data.status_shops.map((shop: any) => ({
+        cadena: shop.cadena,
+        cdn_id: shop.cdn_id,
+        restaurants: shop.restaurants.map((restaurant: any) => ({
+          id: restaurant.id,
+          tienda: restaurant.tienda,
+          application: restaurant.aplication,
+          database: restaurant.database,
+          rst_id: restaurant.rst_id
+        }))
+      }));
+
+      this.cadenas = this.locales.map((shop: any) => shop.cadena);
+
+      this.fill_all_tiendas();
+    })
+    .catch((error) => {
+      console.error('Error al obtener los locales:', error);
+    });
   }
+
+  fill_all_tiendas() {
+    this.tiendas = [];
+    this.locales.forEach((shop) => {
+      this.tiendas = [...this.tiendas, ...shop.restaurants];
+    });
+  }
+
+  onCadenaChange() {
+    if (this.cadena_selected === '') {
+      this.fill_all_tiendas();
+    } 
+    if(this.cadena_selected !== '') {
+      const selectedShop = this.locales.find(shop => shop.cadena === this.cadena_selected);
+      this.tiendas = selectedShop ? selectedShop.restaurants : [];
+        this.cdn_id_selected = selectedShop ? selectedShop.cdn_id : '';
+    }
+  }
+
+  onImageClick(cdn_id: string) {
+    // Busca la tienda por cdn_id
+    const selectedShop = this.locales.find(shop => shop.cdn_id === cdn_id);
+    
+    if (selectedShop) {
+      // Cambia cadena_selected y llama a onCadenaChange
+      this.cadena_selected = selectedShop.cadena; // Si quieres mostrar la cadena también
+      this.onCadenaChange();
+    }
+  }  
 
   show_modal(local: any, content: any) {
     this.local_Selected = local;
