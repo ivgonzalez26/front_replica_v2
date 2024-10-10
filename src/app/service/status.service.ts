@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -7,8 +7,12 @@ import { Injectable } from '@angular/core';
 export class StatusService {
 
   apiUrl = 'http://20.97.157.219:8005/api/';
+  options: any = {};
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
+    this.options = {headers: headers};
+  }
 
   getStatus(): Promise<any> {
     return this.http.get<any>(this.apiUrl + 'StatusShop').toPromise();
@@ -22,6 +26,6 @@ export class StatusService {
       "fecha_inicio": desdeFormateada,
       "fecha_fin": hastaFormateada
     }
-    return this.http.post<any>(this.apiUrl + 'routes/getByIdRestaurantAndDate', JSON.stringify(data)).toPromise();
+    return this.http.post<any>(this.apiUrl + 'routes/getByIdRestaurantAndDate', JSON.stringify(data), this.options).toPromise();
   }
 }

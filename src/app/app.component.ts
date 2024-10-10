@@ -6,7 +6,7 @@ import { TiendasComponent } from "./tiendas/tiendas.component";
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -63,7 +63,7 @@ export class AppComponent {
   onCadenaChange() {
     if (this.cadena_selected === '') {
       this.fill_all_tiendas();
-    } 
+    }
     if(this.cadena_selected !== '') {
       const selectedShop = this.locales.find(shop => shop.cadena === this.cadena_selected);
       this.tiendas = selectedShop ? selectedShop.restaurants : [];
@@ -72,25 +72,29 @@ export class AppComponent {
   }
 
   onImageClick(cdn_id: string) {
-    // Busca la tienda por cdn_id
     const selectedShop = this.locales.find(shop => shop.cdn_id === cdn_id);
-    
     if (selectedShop) {
-      // Cambia cadena_selected y llama a onCadenaChange
-      this.cadena_selected = selectedShop.cadena; // Si quieres mostrar la cadena también
+      this.cadena_selected = selectedShop.cadena;
       this.onCadenaChange();
     }
-  }  
+  }
 
   show_modal(local: any, content: any) {
     this.local_Selected = local;
-    /*
-    this.StatusService.getTramasLocal(this.local_Selected.rst_id, this.inicio, this.fin).then( r => {
-      this.tramas = r.tramas;
-      this.modalService.open(content, { centered: true, fullscreen: true, backdrop: 'static', keyboard: false }).result.then(( response => {
-      }), ( r => {}));
+    this.StatusService.getTramasLocal(Number.parseInt(this.local_Selected.rst_id), this.inicio, this.fin).then( r => {
+      this.tramas = r.data.tramas;
+      if (this.tramas.length == 0) {
+        Swal.fire({
+          title: "La tienda no tiene tramas ejecutadas",
+          icon: "success",
+          showCancelButton: false,
+          confirmButtonText: "Continuar",
+        });
+      } else {
+        this.modalService.open(content, { centered: true, fullscreen: true, backdrop: 'static', keyboard: false }).result.then(( response => {
+        }), ( r => {}));
+      }
     }).catch( e => console.log(e) );
-    */
   }
 
   ngOnInit(): void {
