@@ -7,6 +7,7 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import * as introJs from 'intro.js';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -28,6 +29,40 @@ export class AppComponent {
 
   constructor(private StatusService: StatusService, private modalService: NgbModal) {
     this.fin.setDate(this.inicio.getDate() - 7);
+  }
+
+  startTour() {
+    const intro = introJs.default();
+    intro.setOptions({
+      steps: [
+        {
+          element: '#select_cadena',
+          intro: 'Selecciona la cadena que deseas analizar utilizando este menú desplegable.'
+        },
+        {
+          element: '#fecha_inicio',
+          intro: 'Establece la fecha de inicio para definir el rango temporal desde el cual se obtendrán las tramas ejecutadas en la tienda seleccionada.'
+        },
+        {
+          element: '#fecha_fin',
+          intro: 'Establece la fecha de fin para definir el rango temporal hasta el cual se obtendrán las tramas ejecutadas en la tienda seleccionada.'
+        },
+        {
+          element: '#filter_cadena',
+          intro: 'Selecciona la cadena que deseas analizar dando click sobre el icono que corresponda.'
+        },
+        {
+          element: '#filter_tienda',
+          intro: 'Selecciona la tienda que deseas analizar dando click sobre el botón que corresponda.'
+        },
+      ],
+      showStepNumbers: false,
+      nextLabel: 'Siguiente',
+      prevLabel: 'Anterior',
+      doneLabel: 'Listo',
+    });
+
+    intro.start();
   }
 
   get_locales() {

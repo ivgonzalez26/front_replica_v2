@@ -1,7 +1,7 @@
 <div class="row">
   <div class="btn-toolbar">
     <div class="btn-group me-2">
-      <select class="form-select m-2" style="max-width: 13rem;" [(ngModel)]="cadena_selected" (change)="onCadenaChange()">
+      <select class="form-select m-2" style="max-width: 13rem;" [(ngModel)]="cadena_selected" (change)="onCadenaChange()" id="select_cadena">
         <option value="">Todas</option>
         @for (cadena of cadenas; track $index) {
           <option [value]="cadena">{{ cadena }}</option>
@@ -11,10 +11,13 @@
     <div class="btn-group me-2">
       <div class="input-group m-2">
         <input type="date" class="form-control" placeholder="Inicio" [ngModel]="inicio | date: 'y-MM-dd'"
-        (ngModelChange)="inicio = $event">
+        (ngModelChange)="inicio = $event" id="fecha_inicio">
         <input type="date" class="form-control" placeholder="Fin" [ngModel]="fin | date: 'y-MM-dd'"
-        (ngModelChange)="fin = $event">
+        (ngModelChange)="fin = $event" id="fecha_fin">
       </div>
+    </div>
+    <div class="btn-group me-2">
+      <button class="btn btn-primary btn-sm m-2" (click)="startTour()">Iniciar Tour</button>
     </div>
   </div>
 </div>
@@ -27,7 +30,7 @@
   </div>
 }
 @if(cadena_selected == '') {
-    <div class="row m-4">
+    <div class="row m-4" id="filter_cadena">
         <div class="col-12" style="text-align: center;">
           @for (shop of locales; track $index) {
             <img src="images/{{shop.cdn_id}}.jpg" alt=" " style="width: 150px; height: 50px;" (click)="onImageClick(shop.cdn_id)">
@@ -36,7 +39,7 @@
     </div>
 }
 
-<app-tiendas [locales]="locales" [cadena]="cadena_selected" (tienda_selected)="show_modal($event, content)"></app-tiendas>
+<app-tiendas id="filter_tienda" [locales]="locales" [cadena]="cadena_selected" (tienda_selected)="show_modal($event, content)"></app-tiendas>
 
 <ng-template #content let-modal>
   <div class="modal-header">
